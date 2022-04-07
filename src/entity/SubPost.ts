@@ -6,7 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Post } from './Post';
-@Entity()
+@Entity("SubPost")
 export class SubPost {
   @PrimaryGeneratedColumn()
   id!: number;

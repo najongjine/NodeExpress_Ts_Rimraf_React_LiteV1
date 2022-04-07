@@ -10,28 +10,20 @@ const bcrypt = require('bcrypt');
 //router 인스턴스를 하나 만들고
 const router = Router();
 
-let mysql1: typeorm.Connection;
 import imgUpload from '../../multer/imageUpload';
 
-function getTypeormMysqlInstance(
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction,
-) {
-  mysql1 = req.app.get('mysql1');
-  next();
-}
-router.use(getTypeormMysqlInstance);
+import { AppDataSource } from "../../data-source"
+
 
 router.get('/', async function (요청, 응답) {
-  const result=await queries.q1(mysql1);
+  const result=await AppDataSource.manager.find(User);
   응답.status(200).json(result);
 });
 
 /** https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#joining-relations */
 router.get('/users', async function (요청, 응답) {
   try {
-    const users = await mysql1
+    const users = await AppDataSource
       .createQueryBuilder()
       .select('user.id')
       .addSelect('user.firstName')
@@ -70,7 +62,7 @@ router.get('/users', async function (요청, 응답) {
 router.get('/rawquery', async function (요청, 응답) {
   try {
     let testInput = " '' OR 1=1 ";
-    const users = await mysql1.query(
+    const users = await AppDataSource.query(
       `
     SELECT 
     * 
@@ -95,7 +87,7 @@ router.get('/rawquery', async function (요청, 응답) {
 router.post('/users', async (req, res) => {
   try {
     const hash = await bcrypt.hashSync('test', 10);
-    await mysql1.transaction(async (transactionalEntityManager) => {
+    await AppDataSource.transaction(async (transactionalEntityManager) => {
       const userResult = await transactionalEntityManager.save(User, {
         firstName: `test${new Date().getUTCMilliseconds()}`,
         lastName: `test${new Date().getUTCMilliseconds()}`,
