@@ -1,4 +1,4 @@
 노드 express typescript 버전 스켈레톤
 
-사용법 쉬우니 잘쓰셈
-# NodeExpress_Ts_Rimraf_React_V4
+2022 04 07
+기준으로 rest api 형태로 깍는중...
