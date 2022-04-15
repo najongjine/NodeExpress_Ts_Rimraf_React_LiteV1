@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import express, { Express, Request, Response } from 'express';
 const { configSettings } = require('../../config/settings');
-import { User } from '../../entity/User';
+import { User } from '../../entity_sample/User';
 import typeorm from 'typeorm';
-import { Post } from '../../entity/Post';
-import { SubPost } from '../../entity/SubPost';
+import { Post } from '../../entity_sample/Post';
+import { SubPost } from '../../entity_sample/SubPost';
 const fs = require('fs');
 
 //router 인스턴스를 하나 만들고

@@ -1,15 +1,11 @@
 import { Router } from 'express';
 import express, { Express, Request, Response } from 'express';
-let Validator = require('validatorjs');
-import typeorm from 'typeorm';
-import encryption from '../../utils/encryption';
 import jwtVerification from '../../utils/jwt';
 
 //router 인스턴스를 하나 만들고
 const router = Router();
 
-let mysql1: typeorm.Connection;
-let imgUpload = require('../../multer/imageUpload');
+import { AppDataSource } from '../../data-source';
 
 let userInfo;
 let custMsg = '';
@@ -18,15 +14,13 @@ async function checkJwtToken(
   res: express.Response,
   next: express.NextFunction,
 ) {
-  mysql1 = req.app.get('mysql1');
-
   try {
-    // if (!req.headers.authorization) {
-    //   custMsg = 'no jwt token';
-    //   throw new Error('no jwt token');
-    // }
-    // let payload = jwtVerification.verifyToken(req.headers.authorization);
-    // userInfo = payload;
+    if (!req?.headers?.authorization) {
+      custMsg = 'no jwt token';
+      throw new Error('no jwt token');
+    }
+    let payload = jwtVerification.verifyToken(req.headers.authorization);
+    userInfo = payload;
     next();
   } catch (error: any) {
     res.status(200).json({

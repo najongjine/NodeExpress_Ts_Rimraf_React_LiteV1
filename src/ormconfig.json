@@ -1,0 +1,13 @@
+[
+  {
+    "name": "default",
+    "type": "mariadb",
+    "host": "teraenergy.iptime.org",
+    "port": 13306,
+    "username": "teware",
+    "password": "2021",
+    "database": "",
+    "synchronize": false,
+    "entities": ["entities/*.js"]
+  }
+]

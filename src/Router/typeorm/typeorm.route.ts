@@ -1,9 +1,7 @@
 import { Router } from 'express';
-import express, { Express, Request, Response } from 'express';
-import { User } from '../../entity/User';
-import typeorm from 'typeorm';
-import { Post } from '../../entity/Post';
-import { SubPost } from '../../entity/SubPost';
+import { User } from '../../entity_sample/User';
+import { Post } from '../../entity_sample/Post';
+import { SubPost } from '../../entity_sample/SubPost';
 import queries from './typeorm.queries';
 const bcrypt = require('bcrypt');
 
@@ -12,19 +10,17 @@ const router = Router();
 
 import imgUpload from '../../multer/imageUpload';
 
-import { AppDataSource } from "../../data-source"
-
+import { AppDataSource } from '../../data-source';
 
 router.get('/', async function (요청, 응답) {
-  const result=await AppDataSource.manager.find(User);
+  const result = await AppDataSource.manager.find(User);
   응답.status(200).json(result);
 });
 
 /** https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#joining-relations */
 router.get('/users', async function (요청, 응답) {
   try {
-    const users = await AppDataSource
-      .createQueryBuilder()
+    const users = await AppDataSource.createQueryBuilder()
       .select('user.id')
       .addSelect('user.firstName')
       .addSelect('user.lastName')
