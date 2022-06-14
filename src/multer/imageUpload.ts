@@ -11,7 +11,8 @@ let storage = multer.diskStorage({
   },
   //filename : 파일의 이름을 결정하는 부분입니다. 저장할 때 어떤 이름으로 저장할겁니까. file.originalname이라고 쓰면 그냥 원본 그대로라는 뜻입니다.
   filename: function (req: Request, file: any, cb: any) {
-    cb(null, file.originalname);
+    let encFilename = new Date().getTime() + file.originalname;
+    cb(null, encFilename);
   },
 });
 

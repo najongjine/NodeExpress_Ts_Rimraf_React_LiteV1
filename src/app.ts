@@ -3,8 +3,9 @@ import typeormRouter from './Router/typeorm/typeorm.route';
 import validatorRouter from './Router/dataValidation/dataValidation.route';
 import jwtRouter from './Router/jwt/jwt.route';
 import streamRouter from './Router/stream/stream.route';
+import imageUploadRouter from './Router/image_upload/imageUpload.route';
 const socketRouter = require('./Router/socket/websocket.route');
-import { AppDataSource } from "./data-source"
+import { AppDataSource } from './data-source';
 import { configSettings } from './config/settings';
 const flash = require('connect-flash');
 const cors = require('cors');
@@ -31,17 +32,17 @@ const { Server } = require('socket.io');
 
 const io = new Server(http);
 
-const port: Number = 3000;
+const port: Number = 3003;
 
 /** typeorm mysql connection */
 AppDataSource.initialize()
-    .then(() => {
-        console.log("Data Source has been initialized!")
-    })
-    .catch((err) => {
-        console.error("Error during Data Source initialization", err)
-    })
-  /** END */
+  .then(() => {
+    console.log('Data Source has been initialized!');
+  })
+  .catch((err) => {
+    console.error('Error during Data Source initialization', err);
+  });
+/** END */
 
 /** form tag에서 put, delete 요청도 할수있게 해줌 */
 const methodOverride = require('method-override');
@@ -63,8 +64,6 @@ app.use(
 
 app.use(flash());
 
-
-
 //* logging middleware
 app.use(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -79,10 +78,10 @@ let imgUpload = require('./multer/imageUpload.js');
 /** END */
 
 http.listen(port, function () {
-  console.log('listening on '+port);
+  console.log('listening on ' + port);
 });
 
-app.get('/', function (req:any, res:any) {
+app.get('/', function (req: any, res: any) {
   res.status(200).json({
     success: true,
     data: `__dirname : ${__dirname}`,
@@ -94,11 +93,11 @@ app.get('/reacttest', function (req, res) {
   res.sendFile(`${configSettings.react_project1_path}/build/index.html`);
 });
 app.use('/typeorm', typeormRouter);
-app.use('/socket', socketRouter("pass_some_object"));
+app.use('/socket', socketRouter('pass_some_object'));
 app.use('/validator', validatorRouter);
 app.use('/jwt', jwtRouter);
 app.use('/stream', streamRouter);
-
+app.use('/image_upload', imageUploadRouter);
 
 /** socket */
 io.on('connection', function (socket: any) {
@@ -157,4 +156,4 @@ io.on('connection', function (socket: any) {
   });
 });
 
-require('./schedule')
+require('./schedule');
