@@ -17,6 +17,8 @@ router.post(
   async (req: any, res: Response) => {
     let imageFile = req.file;
     console.log('## req.body: ', req.body);
+
+    // \ 문자열을 / 문자열로 바꾸기
     let urlPath = req.file.path.replace(/\\/gi, '/');
     res
       .status(200)
