@@ -11,8 +11,10 @@ let storage = multer.diskStorage({
   },
   //filename : 파일의 이름을 결정하는 부분입니다. 저장할 때 어떤 이름으로 저장할겁니까. file.originalname이라고 쓰면 그냥 원본 그대로라는 뜻입니다.
   filename: function (req: Request, file: any, cb: any) {
-    let encFilename = new Date().getTime() + file.originalname;
-    cb(null, encFilename);
+    if (file && file.originalname) {
+      let encFilename = new Date().getTime() + file.originalname;
+      cb(null, encFilename);
+    }
   },
 });
 
@@ -20,10 +22,12 @@ let storage = multer.diskStorage({
 let upload = multer({
   storage: storage,
   fileFilter: function (req: Request, file: any, callback: any) {
-    if (!file.mimetype.includes('image')) {
+    if (file && !file?.mimetype?.includes('image')) {
       return callback(new Error('이미지만 업로드하세요'));
     }
-    callback(null, true);
+    if (file) {
+      callback(null, true);
+    }
   },
   //limits는 파일의 사이즈 제한을 걸고 싶을 때 씁니다. 1024 * 1024는 1MB를 뜻합니다.
   limits: {

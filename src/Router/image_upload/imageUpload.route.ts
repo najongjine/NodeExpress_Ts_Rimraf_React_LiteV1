@@ -15,14 +15,18 @@ router.post(
   '/editor',
   imgUpload.single('image'),
   async (req: any, res: Response) => {
-    let imageFile = req.file;
-    console.log('## req.body: ', req.body);
+    try {
+      console.log('## req.file: ', req.file);
+      console.log('## req.body: ', req.body);
 
-    // \ 문자열을 / 문자열로 바꾸기
-    let urlPath = req.file.path.replace(/\\/gi, '/');
-    res
-      .status(200)
-      .json({ success: true, url: `http://localhost:3003/${urlPath}` });
+      // \ 문자열을 / 문자열로 바꾸기
+      let urlPath = req?.file?.path?.replace(/\\/gi, '/');
+      res
+        .status(200)
+        .json({ success: true, url: `http://localhost:3003/${urlPath}` });
+    } catch (error) {
+      console.log('!!! error', error);
+    }
   },
 );
 
