@@ -124,5 +124,13 @@ router.post('/users', async (req, res) => {
   }
 });
 
+router.post('/test1', async (req, res) => {
+  try {
+    console.log('## req body: ', req.body);
+  } catch (error) {
+    console.log('!!! err in test1. ', error);
+  }
+});
+
 // 등록된 라우터를 export
 export default router;
