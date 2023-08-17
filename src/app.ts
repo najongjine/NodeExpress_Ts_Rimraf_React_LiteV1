@@ -69,7 +69,7 @@ app.use(flash());
 app.use(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
     console.log(req.rawHeaders[1]);
-    console.log('this is logging middleware');
+    //console.log('this is logging middleware');
     next();
   },
 );

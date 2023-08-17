@@ -8,7 +8,7 @@
     "preserve": "npm run build",
     "serve": "cross-env NODE_ENV=development concurrently \"tsc --watch\" \"nodemon -q dist/app.js\"",
     "prestart": "npm run build",
-    "start": "cross-env NODE_ENV=production pm2 start dist/app.js",
+    "start": "cross-env NODE_ENV=production pm2 start dist/app.js --name 'test1' -e err.log -o out.log --time",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "jong",
