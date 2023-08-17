@@ -1,9 +1,10 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Express, Request, Response,NextFunction  } from 'express';
 import typeormRouter from './Router/typeorm/typeorm.route';
 import validatorRouter from './Router/dataValidation/dataValidation.route';
 import jwtRouter from './Router/jwt/jwt.route';
 import streamRouter from './Router/stream/stream.route';
 import imageUploadRouter from './Router/image_upload/imageUpload.route';
+import test1Router from './Router/test/test1.route';
 const socketRouter = require('./Router/socket/websocket.route');
 import { AppDataSource } from './data-source';
 import { configSettings } from './config/settings';
@@ -73,6 +74,17 @@ app.use(
   },
 );
 
+// Use the error handler middleware after your routes
+app.use((
+  err: Error,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong' });
+});
+
 /** Multer 세팅 */
 let imgUpload = require('./multer/imageUpload.js');
 /** END */
@@ -98,6 +110,7 @@ app.use('/validator', validatorRouter);
 app.use('/jwt', jwtRouter);
 app.use('/stream', streamRouter);
 app.use('/image_upload', imageUploadRouter);
+app.use('/test', test1Router);
 
 /** socket */
 io.on('connection', function (socket: any) {

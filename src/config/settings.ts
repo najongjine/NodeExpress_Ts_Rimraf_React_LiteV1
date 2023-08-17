@@ -24,8 +24,8 @@ if (ENV_MODE === 'development') {
   typeOrmDb1.host = 'localhost';
   typeOrmDb1.port = 3306;
   typeOrmDb1.username = 'root';
-  typeOrmDb1.password = 'aa12345';
-  typeOrmDb1.database = 'test';
+  typeOrmDb1.password = 'a12345';
+  typeOrmDb1.database = 'test1';
   typeOrmDb1.synchronize = false;
   typeOrmDb1.logging = true;
 
