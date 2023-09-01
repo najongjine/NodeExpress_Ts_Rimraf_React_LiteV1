@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-import { User } from './entity_sample/User';
 
 import { configSettings } from './config/settings';
 
@@ -16,3 +15,6 @@ export const AppDataSource = new DataSource({
   logging: configSettings.typeOrmDb1.logging,
   migrations: ['migration/*.js'], //migration 하고싶은 파일 명
 });
+
+// DB to Entity : (--ssl 은 상황에 따라 붙이거나 삭제시킴)
+// typeorm-model-generator -h DB주소 -d 스키마이름 -p 포트번호 -u db계정이름 -x 비번 -e db종류 -o ./src --ssl

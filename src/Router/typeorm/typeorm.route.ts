@@ -124,6 +124,14 @@ router.post('/users', async (req, res) => {
   }
 });
 
+router.get('/axios_test', async (req, res) => {
+  try {
+    console.log('## req body: ', req.body);
+  } catch (error) {
+    console.log('!!! err in test1. ', error);
+  }
+});
+
 router.post('/test1', async (req, res) => {
   try {
     console.log('## req body: ', req.body);
