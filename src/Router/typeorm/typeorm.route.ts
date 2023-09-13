@@ -55,7 +55,7 @@ router.get('/users', async function (요청, 응답) {
  * - input symbol is vary by DB
  * mysql : ?
  */
-router.get('/rawquery', async function (요청, 응답) {
+router.get('/rawquery', async function (req, res) {
   try {
     let testInput = " '' OR 1=1 ";
     const users = await AppDataSource.query(
@@ -69,9 +69,9 @@ router.get('/rawquery', async function (요청, 응답) {
       [0, testInput],
     );
 
-    응답.status(200).json(users);
+    res.status(200).json(users);
   } catch (err: any) {
-    응답.status(200).json({
+    res.status(200).json({
       success: false,
       data: null,
       custMsg: '',

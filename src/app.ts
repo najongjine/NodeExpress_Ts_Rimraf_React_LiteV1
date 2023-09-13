@@ -1,10 +1,15 @@
-import express, { Express, Request, Response,NextFunction  } from 'express';
+//@ts-ignore
+import express, { Express, Request, Response, NextFunction } from 'express';
+//@ts-ignore
+import path from 'path';
+import initializeSocket from './socket';
 import typeormRouter from './Router/typeorm/typeorm.route';
 import validatorRouter from './Router/dataValidation/dataValidation.route';
 import jwtRouter from './Router/jwt/jwt.route';
 import streamRouter from './Router/stream/stream.route';
 import imageUploadRouter from './Router/image_upload/imageUpload.route';
 import test1Router from './Router/test/test1.route';
+import ejsRouter from './Router/ejs/ejs.route';
 const socketRouter = require('./Router/socket/websocket.route');
 import { AppDataSource } from './data-source';
 import { configSettings } from './config/settings';
@@ -29,9 +34,8 @@ const credentials = {
 
 const http = require('http').createServer(app);
 //const http = https.createServer(credentials, app);
-const { Server } = require('socket.io');
 
-const io = new Server(http);
+initializeSocket(http);
 
 const port: Number = 3003;
 
@@ -58,29 +62,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/public', express.static('public'));
-app.use(
-  '/react1',
-  express.static(`${configSettings.react_project1_path}/build`),
-);
+
+// Configure EJS as the view engine
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, '..', 'views'));
 
 app.use(flash());
 
 //* logging middleware
 app.use(
   (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    console.log(req.rawHeaders[1]);
+    //console.log(req.rawHeaders[1]);
     //console.log('this is logging middleware');
     next();
   },
 );
 
 // Use the error handler middleware after your routes
-app.use((
-  err: Error,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
   res.status(500).json({ error: 'Something went wrong' });
 });
@@ -101,9 +100,7 @@ app.get('/', function (req: any, res: any) {
     errMsg: '',
   });
 });
-app.get('/reacttest', function (req, res) {
-  res.sendFile(`${configSettings.react_project1_path}/build/index.html`);
-});
+
 app.use('/typeorm', typeormRouter);
 app.use('/socket', socketRouter('pass_some_object'));
 app.use('/validator', validatorRouter);
@@ -111,62 +108,6 @@ app.use('/jwt', jwtRouter);
 app.use('/stream', streamRouter);
 app.use('/image_upload', imageUploadRouter);
 app.use('/test', test1Router);
-
-/** socket */
-io.on('connection', function (socket: any) {
-  console.log('User Connected :' + socket.id);
-
-  //Triggered when a peer hits the join room button.
-
-  socket.on('join', function (roomName: string) {
-    let rooms = io.sockets.adapter.rooms;
-    let room = rooms.get(roomName);
-
-    //room == undefined when no such room exists.
-    if (room == undefined) {
-      socket.join(roomName);
-      socket.emit('created');
-    } else if (room.size == 1) {
-      //room.size == 1 when one person is inside the room.
-      socket.join(roomName);
-      socket.emit('joined');
-    } else {
-      //when there are already two people inside the room.
-      socket.emit('full');
-    }
-    console.log(rooms);
-  });
-
-  //Triggered when the person who joined the room is ready to communicate.
-  socket.on('ready', function (roomName: string) {
-    socket.broadcast.to(roomName).emit('ready'); //Informs the other peer in the room.
-  });
-
-  //Triggered when server gets an icecandidate from a peer in the room.
-
-  socket.on('candidate', function (candidate: any, roomName: string) {
-    console.log(candidate);
-    socket.broadcast.to(roomName).emit('candidate', candidate); //Sends Candidate to the other peer in the room.
-  });
-
-  //Triggered when server gets an offer from a peer in the room.
-
-  socket.on('offer', function (offer: any, roomName: string) {
-    socket.broadcast.to(roomName).emit('offer', offer); //Sends Offer to the other peer in the room.
-  });
-
-  //Triggered when server gets an answer from a peer in the room.
-
-  socket.on('answer', function (answer: any, roomName: string) {
-    socket.broadcast.to(roomName).emit('answer', answer); //Sends Answer to the other peer in the room.
-  });
-
-  //Triggered when peer leaves the room.
-
-  socket.on('leave', function (roomName: string) {
-    socket.leave(roomName);
-    socket.broadcast.to(roomName).emit('leave');
-  });
-});
+app.use('/ejs', ejsRouter);
 
 require('./schedule');

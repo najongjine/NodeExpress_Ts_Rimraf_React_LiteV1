@@ -13,7 +13,7 @@ router.get('/test1', async function (req, res) {
     res.status(200).json(test1);
 });
 
-router.get('/rawquery', async function (요청, 응답) {
+router.get('/rawquery', async function (요청, res) {
     try {
       let testInput = " '' OR 1=1 ";
       const users = await AppDataSource.query(
@@ -24,9 +24,19 @@ router.get('/rawquery', async function (요청, 응답) {
       `
       );
   
-      응답.status(200).json(users);
+      res.status(200).json({
+        success:true
+        ,data:{
+          title:"베테랑 best 작품"
+          ,itemList:[
+            {
+              
+            }
+          ]
+        }
+      });
     } catch (err: any) {
-      응답.status(200).json({
+      res.status(200).json({
         success: false,
         data: null,
         custMsg: '',
