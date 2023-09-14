@@ -1,7 +1,8 @@
 import { Server } from 'socket.io';
 
-export default (httpServer: any) => {
+export default (httpServer: any, app: any) => {
   const io = new Server(httpServer);
+  app.io = io;
 
   io.on('connection', (socket) => {
     console.log('User Connected :' + socket.id);

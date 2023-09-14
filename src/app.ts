@@ -35,7 +35,7 @@ const credentials = {
 const http = require('http').createServer(app);
 //const http = https.createServer(credentials, app);
 
-initializeSocket(http);
+initializeSocket(http, app);
 
 const port: Number = 3003;
 
