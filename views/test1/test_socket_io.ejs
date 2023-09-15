@@ -34,17 +34,20 @@
       const socket = io.connect('http://localhost:3003'); // Replace with your server URL
 
       // Listen for the 'connect' event
-      socket.on('connect', () => {
+      socket.on('connect', async () => {
         document.getElementById('status').textContent = 'Connected';
       });
 
       // Listen for custom events
-      socket.on('custom-event', (data) => {
-        alert(`Received data from server: ${data}`);
+      socket.on('custom-event', async (data) => {
+        console.log('## custom-event: ', data);
+      });
+      socket.on('socket_id', async (data) => {
+        console.log('## socket_id data: ', data);
       });
 
       // Emit a custom event to the server
-      document.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener('DOMContentLoaded', async () => {
         const button = document.createElement('button');
         button.textContent = 'Send Data to Server';
         button.addEventListener('click', () => {

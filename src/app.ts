@@ -10,7 +10,7 @@ import streamRouter from './Router/stream/stream.route';
 import imageUploadRouter from './Router/image_upload/imageUpload.route';
 import test1Router from './Router/test/test1.route';
 import ejsRouter from './Router/ejs/ejs.route';
-const socketRouter = require('./Router/socket/websocket.route');
+import socketRouter from './Router/socket/socketio.route';
 import { AppDataSource } from './data-source';
 import { configSettings } from './config/settings';
 const flash = require('connect-flash');
@@ -102,7 +102,7 @@ app.get('/', function (req: any, res: any) {
 });
 
 app.use('/typeorm', typeormRouter);
-app.use('/socket', socketRouter('pass_some_object'));
+app.use('/socket', socketRouter);
 app.use('/validator', validatorRouter);
 app.use('/jwt', jwtRouter);
 app.use('/stream', streamRouter);

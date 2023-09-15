@@ -6,8 +6,8 @@ export default (httpServer: any, app: any) => {
 
   io.on('connection', (socket) => {
     console.log('User Connected :' + socket.id);
-
     //Triggered when a peer hits the join room button.
+    io.to(socket.id).emit('socket_id', socket.id);
 
     socket.on('join', function (roomName: string) {
       let rooms = io.sockets.adapter.rooms;
@@ -54,7 +54,7 @@ export default (httpServer: any, app: any) => {
 
     socket.on('custom-event', function (msg: any) {
       console.log('## custom-event msg: ', msg);
-      socket.broadcast.emit('custom-event-a', 'dfdfd 33'); //Sends Answer to the other peer in the room except sender.
+      socket.broadcast.emit('custom-event', 'dfdfd 33'); //Sends Answer to the other peer in the room except sender.
     });
 
     //Triggered when peer leaves the room.
