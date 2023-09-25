@@ -1,5 +1,8 @@
 //@ts-ignore
 import express, { Express, Request, Response, NextFunction } from 'express';
+
+import { createClient } from 'redis';
+
 //@ts-ignore
 import path from 'path';
 import initializeSocket from './socket';
@@ -11,6 +14,7 @@ import imageUploadRouter from './Router/image_upload/imageUpload.route';
 import test1Router from './Router/test/test1.route';
 import ejsRouter from './Router/ejs/ejs.route';
 import socketRouter from './Router/socket/socketio.route';
+import excelRouter from './Router/excel/excel.route';
 import { AppDataSource } from './data-source';
 import { configSettings } from './config/settings';
 const flash = require('connect-flash');
@@ -20,7 +24,7 @@ const bcrypt = require('bcrypt');
 require('dotenv').config();
 
 // app 이라는건 하나의 서버. 싱글톤 인스턴스이기도 함
-const app: Express = express();
+const app = express() as any;
 app.use(cors());
 
 const fs = require('fs');
@@ -35,7 +39,20 @@ const credentials = {
 const http = require('http').createServer(app);
 //const http = https.createServer(credentials, app);
 
-initializeSocket(http, app);
+/** redis connection */
+// https://inpa.tistory.com/entry/REDIS-%F0%9F%93%9A-Window10-%ED%99%98%EA%B2%BD%EC%97%90-Redis-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0
+const redis = createClient();
+redis.on('error', (err) => console.error('!!! Redis Client Error', err));
+redis.connect();
+app.use(async (req: any, res: any, next: any) => {
+  req.redis = redis;
+  next();
+});
+/** redis connection END*/
+
+// socket.io
+initializeSocket(http, app, redis);
+// socket.io END
 
 const port: Number = 3003;
 
@@ -109,5 +126,6 @@ app.use('/stream', streamRouter);
 app.use('/image_upload', imageUploadRouter);
 app.use('/test', test1Router);
 app.use('/ejs', ejsRouter);
+app.use('/excel', excelRouter);
 
 require('./schedule');
