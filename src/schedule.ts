@@ -1,4 +1,3 @@
-import { User } from './entity_sample/User';
 const schedule = require('node-schedule');
 import { configSettings } from './config/settings';
 import { AppDataSource } from './data-source';

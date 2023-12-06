@@ -3,7 +3,7 @@
  * else : azure app service
  */
 const ENV_MODE = process.env.NODE_ENV;
-
+let PORT = 3000;
 var typeOrmDb1 = {
   type: '',
   host: '',
@@ -17,7 +17,6 @@ var typeOrmDb1 = {
 const cryptoKey = 'cryptoKeySample@#@$%#%$#@!!';
 const jwtKey = 'jwtKeySample@#@$%#%$#@!!';
 let mongoDBConnString = '';
-let react_project1_path = '';
 
 if (ENV_MODE === 'development') {
   typeOrmDb1.type = 'mysql';
@@ -28,9 +27,6 @@ if (ENV_MODE === 'development') {
   typeOrmDb1.database = 'test1';
   typeOrmDb1.synchronize = false;
   typeOrmDb1.logging = true;
-
-
-  react_project1_path = `H:/MyProjects/Express/NodeExpress_Ts_Rimraf_React_V4/react_project1`;
 } else {
   typeOrmDb1.type = '안알랴줌';
   typeOrmDb1.host = '안알랴줌';
@@ -42,7 +38,6 @@ if (ENV_MODE === 'development') {
   typeOrmDb1.logging = false;
 
   mongoDBConnString = `안알랴줌`;
-  react_project1_path = `H:/MyProjects/Express/NodeExpress_Ts_Rimraf_React_V4/react_project1`;
 }
 
 export const configSettings = {
@@ -51,5 +46,5 @@ export const configSettings = {
   cryptoKey,
   jwtKey,
   mongoDBConnString,
-  react_project1_path,
+  PORT,
 };

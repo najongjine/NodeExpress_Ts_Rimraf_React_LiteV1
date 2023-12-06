@@ -6,12 +6,14 @@ const router = Router();
 import imgUpload from '../../multer/imageUpload';
 
 import { AppDataSource } from '../../data-source';
+import * as common_modules from '../../utils/common_modules';
 
-// https://stackoverflow.com/questions/37559610/socket-io-emit-on-express-route
+// https://socket.io/docs/v3/emitting-events/
 router.get('/test_router_emit', function (req: any, res) {
   try {
-    let socketId = req.query?.socketId ?? '';
-    req.app.io.to(socketId).emit('custom-event', { key: 'value' });
+    const socketIO = common_modules.socketIO_ref;
+    const socket = common_modules.socket_ref;
+    socketIO.emit('custom-event', { test1: 'test1' });
     return res.status(200).json({
       success: true,
       data: null,

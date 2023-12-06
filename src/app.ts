@@ -5,9 +5,9 @@ import { createClient } from 'redis';
 
 //@ts-ignore
 import path from 'path';
+import Redis from 'ioredis';
 import initializeSocket from './socket';
 import typeormRouter from './Router/typeorm/typeorm.route';
-import validatorRouter from './Router/dataValidation/dataValidation.route';
 import jwtRouter from './Router/jwt/jwt.route';
 import streamRouter from './Router/stream/stream.route';
 import imageUploadRouter from './Router/image_upload/imageUpload.route';
@@ -17,14 +17,16 @@ import socketRouter from './Router/socket/socketio.route';
 import excelRouter from './Router/excel/excel.route';
 import { AppDataSource } from './data-source';
 import { configSettings } from './config/settings';
+import * as common_modules from './utils/common_modules';
+
 const flash = require('connect-flash');
 const cors = require('cors');
-const bcrypt = require('bcrypt');
 
 require('dotenv').config();
 
 // app 이라는건 하나의 서버. 싱글톤 인스턴스이기도 함
 const app = express() as any;
+common_modules.set_app_ref(app);
 app.use(cors());
 
 const fs = require('fs');
@@ -37,24 +39,24 @@ const credentials = {
 };
 
 const http = require('http').createServer(app);
+common_modules.set_httpServer_ref(http);
 //const http = https.createServer(credentials, app);
 
 /** redis connection */
-// https://inpa.tistory.com/entry/REDIS-%F0%9F%93%9A-Window10-%ED%99%98%EA%B2%BD%EC%97%90-Redis-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0
-const redis = createClient();
-redis.on('error', (err) => console.error('!!! Redis Client Error', err));
-redis.connect();
-app.use(async (req: any, res: any, next: any) => {
-  req.redis = redis;
-  next();
-});
+// redis 같은 경우 객체 생성이후 reference 를 저장 시키면 다른 모듈에선 undefined 가 되버린다(redis 모듈의 특징인듯). redis 는 컴퓨터 자체에 설치된 메모리 db 소프트웨어라서
+// 다른 모듈에서 redis를 사용하고 싶을땐 new Redis() 로 객체를 만들고 사용하면 이미 set() 된 값들은 앱 전역으로 공유된다
+(async () => {
+  const redis = new Redis();
+  redis.set('test1', 'test1');
+})();
+
 /** redis connection END*/
 
 // socket.io
-initializeSocket(http, app, redis);
+initializeSocket();
 // socket.io END
 
-const port: Number = 3003;
+const port: Number = configSettings.PORT;
 
 /** typeorm mysql connection */
 AppDataSource.initialize()
@@ -75,8 +77,8 @@ app.use(methodOverride('_method'));
  * post로 온 데이터를 req.body 에서 꺼내기위한 body parser
  * body parser:= body or input으로 온 데이터를 해석을 할수있게 도와줌
  */
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '15mb' }));
+app.use(express.urlencoded({ limit: '15mb', extended: true }));
 
 app.use('/public', express.static('public'));
 
@@ -101,15 +103,11 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({ error: 'Something went wrong' });
 });
 
-/** Multer 세팅 */
-let imgUpload = require('./multer/imageUpload.js');
-/** END */
-
 http.listen(port, function () {
   console.log('listening on ' + port);
 });
 
-app.get('/', function (req: any, res: any) {
+app.get('/a', function (req: any, res: any) {
   res.status(200).json({
     success: true,
     data: `__dirname : ${__dirname}`,
@@ -120,7 +118,6 @@ app.get('/', function (req: any, res: any) {
 
 app.use('/typeorm', typeormRouter);
 app.use('/socket', socketRouter);
-app.use('/validator', validatorRouter);
 app.use('/jwt', jwtRouter);
 app.use('/stream', streamRouter);
 app.use('/image_upload', imageUploadRouter);

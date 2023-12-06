@@ -29,6 +29,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 
   <script>
+    $(document).ready(() => {
+      console.log('## ready! : ');
+    });
     (async () => {
       // Connect to the Socket.IO server
       const socket = io.connect('http://localhost:3003'); // Replace with your server URL
@@ -44,6 +47,9 @@
       });
       socket.on('socket_id', async (data) => {
         console.log('## socket_id data: ', data);
+      });
+      socket.on('on_new_alarm ', async (data) => {
+        let result = axios('/alarm');
       });
 
       // Emit a custom event to the server

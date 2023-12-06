@@ -1,14 +1,12 @@
 import { Server } from 'socket.io';
+import * as common_modules from './utils/common_modules';
 
-export default (httpServer: any, app: any, redis: any) => {
-  const io = new Server(httpServer);
-  app.io = io;
-
+export default () => {
+  const io = new Server(common_modules.httpServer_ref);
+  common_modules.set_socketIO(io);
   io.on('connection', async (socket) => {
+    common_modules.set_socket(socket);
     console.log('User Connected :' + socket.id);
-    await redis?.set('key', 'value');
-    const value = await redis?.get('key');
-    console.log('## redis: ', value);
     //Triggered when a peer hits the join room button.
     io.to(socket.id).emit('socket_id', socket.id);
 
