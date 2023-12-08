@@ -37,7 +37,7 @@ const credentials = {
   key: fs.readFileSync('./private.pem'),
   cert: fs.readFileSync('./public.pem'),
 };
-
+/** webrtc 용 테스트를 위한 이상한 파일들 END */
 const http = require('http').createServer(app);
 common_modules.set_httpServer_ref(http);
 //const http = https.createServer(credentials, app);
@@ -45,11 +45,10 @@ common_modules.set_httpServer_ref(http);
 /** redis connection */
 // redis 같은 경우 객체 생성이후 reference 를 저장 시키면 다른 모듈에선 undefined 가 되버린다(redis 모듈의 특징인듯). redis 는 컴퓨터 자체에 설치된 메모리 db 소프트웨어라서
 // 다른 모듈에서 redis를 사용하고 싶을땐 new Redis() 로 객체를 만들고 사용하면 이미 set() 된 값들은 앱 전역으로 공유된다
-(async () => {
-  const redis = new Redis();
-  redis.set('test1', 'test1');
-})();
-
+// (async () => {
+//   const redis = new Redis();
+//   redis.set('test1', 'test1');
+// })();
 /** redis connection END*/
 
 // socket.io
@@ -107,7 +106,7 @@ http.listen(port, function () {
   console.log('listening on ' + port);
 });
 
-app.get('/a', function (req: any, res: any) {
+app.get('/', function (req: any, res: any) {
   res.status(200).json({
     success: true,
     data: `__dirname : ${__dirname}`,

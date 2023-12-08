@@ -9,7 +9,7 @@ import { AppDataSource } from '../../data-source';
 import * as common_modules from '../../utils/common_modules';
 
 // https://socket.io/docs/v3/emitting-events/
-router.get('/test_router_emit', function (req: any, res) {
+router.get('/test_router_emit', async function (req: any, res) {
   try {
     const socketIO = common_modules.socketIO_ref;
     const socket = common_modules.socket_ref;

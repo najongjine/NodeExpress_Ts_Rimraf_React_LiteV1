@@ -29,16 +29,19 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 
   <script>
-    $(document).ready(() => {
-      console.log('## ready! : ');
-    });
     (async () => {
       // Connect to the Socket.IO server
-      const socket = io.connect('http://localhost:3003'); // Replace with your server URL
-
+      const socket = io.connect('http://localhost:3000'); // Replace with your server URL
+      let socketId;
       // Listen for the 'connect' event
       socket.on('connect', async () => {
         document.getElementById('status').textContent = 'Connected';
+        socketId = socket.id;
+        console.log('## socketId: ', socketId);
+        socket.emit('user_socket_id', {
+          userId: 2,
+          socketId: socketId,
+        });
       });
 
       // Listen for custom events

@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { User } from '../../entity_sample/User';
-import { Post } from '../../entity_sample/Post';
-import { SubPost } from '../../entity_sample/SubPost';
+import { User } from '../../entity/User';
+import { Post } from '../../entity/Post';
+import { SubPost } from '../../entity/SubPost';
 import queries from './typeorm.queries';
 const bcrypt = require('bcrypt');
 
@@ -11,6 +11,7 @@ const router = Router();
 import imgUpload from '../../multer/imageUpload';
 
 import { AppDataSource } from '../../data-source';
+import * as repositories from '../../utils/common_repositories';
 
 router.get('/', async function (요청, 응답) {
   const result = await AppDataSource.manager.find(User);
@@ -20,9 +21,16 @@ router.get('/', async function (요청, 응답) {
 /** https://github.com/typeorm/typeorm/blob/master/docs/select-query-builder.md#joining-relations */
 router.get('/users', async function (요청, 응답) {
   try {
+    const funcOrm1 = await repositories.t1Repository.find({
+      skip: 0,
+      take: 1000,
+      order: { id: 'DESC' },
+    });
+    const funcOrm2 = await repositories.t1Repository.find({ where: { id: 1 } });
+
     const users = await AppDataSource.createQueryBuilder()
       .select('user.id')
-      .addSelect('user.firstName')
+      .addSelect('user.firstName AS first_anme')
       .addSelect('user.lastName')
       // User 라는 entity를 user라는 별명으로 지어줌
       .from(User, 'user')
@@ -30,7 +38,7 @@ router.get('/users', async function (요청, 응답) {
       .leftJoinAndSelect('user.posts', 'post')
       //post 테이블에 subpost 테이블을 leftjoin 시켜주는 코드. Post entity 에 있는 subPosts 라는 변수를 subPost 라는 별명으로 지어줌
       .leftJoinAndSelect('post.subPosts', 'subPost')
-      .where('')
+      .where('1=1')
       .andWhere('post.id > :id', { id: 0 })
       .andWhere('subPost.id > :id', { id: 0 })
       .skip(0)

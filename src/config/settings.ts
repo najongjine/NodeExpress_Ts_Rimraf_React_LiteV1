@@ -16,6 +16,7 @@ var typeOrmDb1 = {
 };
 const cryptoKey = 'cryptoKeySample@#@$%#%$#@!!';
 const jwtKey = 'jwtKeySample@#@$%#%$#@!!';
+let img_file_upload_path = 'C:/Users/DAIN/Pictures/normal_upload';
 let mongoDBConnString = '';
 
 if (ENV_MODE === 'development') {
@@ -47,4 +48,5 @@ export const configSettings = {
   jwtKey,
   mongoDBConnString,
   PORT,
+  img_file_upload_path,
 };
