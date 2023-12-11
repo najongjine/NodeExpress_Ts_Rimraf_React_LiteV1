@@ -38,7 +38,7 @@
         document.getElementById('status').textContent = 'Connected';
         socketId = socket.id;
         console.log('## socketId: ', socketId);
-        socket.emit('user_socket_id', {
+        socket.to('admin').emit('user_socket_id', {
           userId: 2,
           socketId: socketId,
         });

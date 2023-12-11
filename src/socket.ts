@@ -17,6 +17,64 @@ export default () => {
       let rooms = io.sockets.adapter.rooms;
       let room = rooms.get(roomName);
 
+      if (roomName?.trim()) {
+        socket.join(roomName.trim());
+      }
+    });
+
+    socket.on('user_socket_id', function (msg: any) {
+      let userId = msg?.userId;
+      let socketId = msg?.socketId;
+      console.log('## userId: ', userId);
+      console.log('## socketId: ', socketId);
+      if (userId && socketId) {
+        let userSocket =
+          userSocketInfo.userSocketInfos.find((e) => e?.userId == userId) ?? {};
+        if (userSocket?.userId) {
+          console.log('## userSocket: ', userSocket);
+          userSocket.userId = userId;
+          userSocket.socketId = socketId;
+        } else {
+          console.log('## push');
+          userSocketInfo.userSocketInfos.push({
+            userId: userId,
+            socketId: socketId,
+            createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
+          });
+        }
+      }
+      console.log('## userSocketInfos: ', userSocketInfo.userSocketInfos);
+      socket.broadcast.emit('custom-event', 'dfdfd 33'); //Sends Answer to the other peer in the room except sender.
+    });
+
+    //Triggered when peer leaves the room.
+
+    socket.on('leave', function (roomName: string) {
+      socket.leave(roomName);
+      socket.broadcast.to(roomName).emit('leave');
+    });
+    socket.on('disconnect', function () {
+      const index = userSocketInfo.userSocketInfos.findIndex(
+        (e) => e?.socketId ?? '' == socket.id,
+      );
+      if (index >= 0) delete userSocketInfo.userSocketInfos[index];
+    });
+  });
+};
+/*
+export default () => {
+  const io = new Server(common_modules.httpServer_ref);
+  common_modules.set_socketIO(io);
+  io.on('connection', async (socket) => {
+    common_modules.set_socket(socket);
+    console.log('User Connected :' + socket.id);
+    //Triggered when a peer hits the join room button.
+    io.to(socket.id).emit('socket_id', socket.id);
+
+    socket.on('join', function (roomName: any) {
+      let rooms = io.sockets.adapter.rooms;
+      let room = rooms.get(roomName);
+
       //room == undefined when no such room exists.
       if (room == undefined) {
         socket.join(roomName);
@@ -93,3 +151,4 @@ export default () => {
     });
   });
 };
+*/

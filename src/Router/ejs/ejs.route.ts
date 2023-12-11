@@ -15,6 +15,14 @@ router.get('/test1', async function (req, res) {
     return res.render('test1/test1.ejs');
   }
 });
+router.get('/video', async function (req, res) {
+  try {
+    let test1: any;
+    return res.render('test1/video_stream.ejs');
+  } catch (error) {
+    return res.render('test1/video_stream.ejs');
+  }
+});
 router.get('/socket_io', async function (req, res) {
   try {
     let test1: any;
