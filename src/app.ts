@@ -15,6 +15,7 @@ import test1Router from './Router/test/test1.route';
 import ejsRouter from './Router/ejs/ejs.route';
 import socketRouter from './Router/socket/socketio.route';
 import excelRouter from './Router/excel/excel.route';
+import llamaRouter from './Router/llama/llama.route';
 import { AppDataSource } from './data-source';
 import { configSettings } from './config/settings';
 import * as common_modules from './utils/common_modules';
@@ -123,5 +124,6 @@ app.use('/image_upload', imageUploadRouter);
 app.use('/test', test1Router);
 app.use('/ejs', ejsRouter);
 app.use('/excel', excelRouter);
+app.use('/llama', llamaRouter);
 
 require('./schedule');
