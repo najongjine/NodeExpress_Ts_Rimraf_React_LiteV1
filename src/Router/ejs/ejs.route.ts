@@ -19,10 +19,6 @@ router.get('/video', async function (req, res) {
   try {
     let test1: any;
     return res.render('test1/video_stream.ejs');
-    return res.send(`
-    <html>
-    </html>
-    `);
   } catch (error) {
     return res.render('test1/video_stream.ejs');
   }

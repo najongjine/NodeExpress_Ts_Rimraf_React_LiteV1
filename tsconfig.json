@@ -3,7 +3,7 @@
 {
   "compilerOptions": {
     "lib": ["es2015"],
-    "target": "es5",
+    "target": "ESNext",
     "module": "commonjs",
     "outDir": "dist",
     "moduleResolution": "node",
