@@ -38,8 +38,8 @@
           // 결제수단 파라미터 (자동결제는 카드만 지원합니다.)
           // 결제 정보 파라미터
           customerKey: 'oVUqSG6EJPu3OqXt5Nh26', // 고객 ID로 상점에서 만들어야 합니다. 빌링키와 매핑됩니다. 자세한 파라미터 설명은 파라미터 설명을 참고하세요: https://docs.tosspayments.com/reference/js-sdk#결제-정보-5
-          successUrl: 'http://localhost:3003/test/toss_auto_callback', // 카드 등록에 성공하면 이동하는 페이지(직접 만들어주세요)
-          failUrl: 'http://localhost:3003/test/toss_auto_fail', // 카드 등록에 실패하면 이동하는 페이지(직접 만들어주세요)
+          successUrl: 'http://localhost:3000/test/toss_auto_callback', // 카드 등록에 성공하면 이동하는 페이지(직접 만들어주세요)
+          failUrl: 'http://localhost:3000/test/toss_auto_fail', // 카드 등록에 실패하면 이동하는 페이지(직접 만들어주세요)
         })
         .catch(function (error) {
           if (error.code === 'USER_CANCEL') {

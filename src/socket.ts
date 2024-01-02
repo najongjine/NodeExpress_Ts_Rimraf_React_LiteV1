@@ -1,6 +1,5 @@
 import { Server } from 'socket.io';
 import * as common_modules from './utils/common_modules';
-import userSocketInfo from './utils/FUserSocketInfo';
 //@ts-ignore
 import moment from 'moment-timezone';
 
@@ -28,22 +27,8 @@ export default () => {
       console.log('## userId: ', userId);
       console.log('## socketId: ', socketId);
       if (userId && socketId) {
-        let userSocket =
-          userSocketInfo.userSocketInfos.find((e) => e?.userId == userId) ?? {};
-        if (userSocket?.userId) {
-          console.log('## userSocket: ', userSocket);
-          userSocket.userId = userId;
-          userSocket.socketId = socketId;
-        } else {
-          console.log('## push');
-          userSocketInfo.userSocketInfos.push({
-            userId: userId,
-            socketId: socketId,
-            createdAt: moment().format('YYYY-MM-DD HH:mm:ss'),
-          });
-        }
+        // redis || RDB를 이용해서 유저의 소켓id 저장 필요
       }
-      console.log('## userSocketInfos: ', userSocketInfo.userSocketInfos);
       socket.broadcast.emit('custom-event', 'dfdfd 33'); //Sends Answer to the other peer in the room except sender.
     });
 
@@ -54,10 +39,7 @@ export default () => {
       socket.broadcast.to(roomName).emit('leave');
     });
     socket.on('disconnect', function () {
-      const index = userSocketInfo.userSocketInfos.findIndex(
-        (e) => e?.socketId ?? '' == socket.id,
-      );
-      if (index >= 0) delete userSocketInfo.userSocketInfos[index];
+      // redis || RDB를 이용해서 유저의 소켓id remove 필요
     });
   });
 };

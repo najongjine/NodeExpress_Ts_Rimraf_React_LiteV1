@@ -68,7 +68,7 @@
       // https://docs.tosspayments.com/reference/widget-sdk#renderpaymentmethods선택자-결제-금액-옵션
       const paymentMethodWidget = paymentWidget.renderPaymentMethods(
         '#payment-method',
-        { value: 50000 },
+        { value: 500 },
         // 렌더링하고 싶은 결제 UI의 variantKey
         // 결제 수단 및 스타일이 다른 멀티 UI를 직접 만들고 싶다면 계약이 필요해요.
         // https://docs.tosspayments.com/guides/payment-widget/admin#멀티-결제-ui
@@ -99,7 +99,7 @@
           //주문 id입니다. 중복되지 않는 고유한 값으로 입력하시기 바랍니다.
           orderId: `${new Date().getTime()}`,
           orderName: '토스 티셔츠 외 2건', //주문상품
-          successUrl: 'http://localhost:3003/test/toss_normal_callback', //성공시 url
+          successUrl: 'http://localhost:3000/test/toss_normal_callback', //성공시 url
           failUrl: 'http://localhost:3003/common/fail', //실패시 url
           customerEmail: 'customer123@gmail.com', //유저 테이블에서 꺼내온 이메일
           customerName: '김토스', //유저 테이블에서 꺼내온 이름

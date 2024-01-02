@@ -5,7 +5,7 @@ import { createClient } from 'redis';
 
 //@ts-ignore
 import path from 'path';
-import Redis from 'ioredis';
+import redisClient from './redis';
 import initializeSocket from './socket';
 import typeormRouter from './Router/typeorm/typeorm.route';
 import jwtRouter from './Router/jwt/jwt.route';
@@ -18,6 +18,7 @@ import excelRouter from './Router/excel/excel.route';
 import { AppDataSource } from './data-source';
 import { configSettings } from './config/settings';
 import * as common_modules from './utils/common_modules';
+import * as errCodes from './utils/error_code';
 
 const flash = require('connect-flash');
 const cors = require('cors');
@@ -28,6 +29,7 @@ require('dotenv').config();
 const app = express() as any;
 common_modules.set_app_ref(app);
 app.use(cors());
+redisClient.flushall();
 
 const fs = require('fs');
 const https = require('https');
@@ -88,19 +90,18 @@ app.set('views', path.join(__dirname, '..', 'views'));
 app.use(flash());
 
 //* logging middleware
-app.use(
-  (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    //console.log(req.rawHeaders[1]);
-    //console.log('this is logging middleware');
-    next();
-  },
-);
+app.use((req: any, res: express.Response, next: express.NextFunction) => {
+  //console.log(req.rawHeaders[1]);
+  //console.log('this is logging middleware');
+  errCodes.set_langCode(req?.langCode ?? 'ko');
+  next();
+});
 
 // Use the error handler middleware after your routes
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong' });
-});
+// app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+//   console.error(err.stack);
+//   res.status(500).json({ error: 'Something went wrong' });
+// });
 
 http.listen(port, function () {
   console.log('listening on ' + port);

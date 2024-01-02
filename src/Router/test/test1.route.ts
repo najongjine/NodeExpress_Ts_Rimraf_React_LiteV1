@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { langCode, errorCode, cCodes } from '../../utils/error_code';
 
 //router 인스턴스를 하나 만들고
 const router = Router();
@@ -30,11 +31,12 @@ router.get('/test1', async function (req: any, res) {
     });
   }
 });
-router.post('/test1', async function (req: any, res) {
+router.get('/test2', async function (req: any, res) {
   try {
     let bodyData = (req?.body?.test1 ?? '') as string;
-    const data = await repositories.t1Repository.find();
-    return res.status(200).json({ success: true, data: data });
+    return res
+      .status(200)
+      .json({ code: '0', a: errorCode[cCodes.c0][cCodes.c1_0001] });
   } catch (error: any) {
     return res.json({
       success: false,
@@ -77,6 +79,8 @@ router.get('/toss_auto_callback', async function (req, res) {
     let responseJson = req?.query?.responseJson ?? '';
     let customerKey = req?.query?.customerKey ?? '';
     let authKey = req?.query?.authKey ?? '';
+    let secretKey = 'test_gsk_nRQoOaPz8LDa6NxPR4lv8y47BMw6';
+    //let secretKey = 'test_sk_lpP2YxJ4K87WGQaYZqv8RGZwXLOb';
     console.log('## customerKey : ', customerKey);
     console.log('## authKey : ', authKey);
 
@@ -88,7 +92,7 @@ router.get('/toss_auto_callback', async function (req, res) {
         timeout: 5 * 60 * 1000,
         headers: {
           Authorization:
-            'Basic dGVzdF9za196WExrS0V5cE5BcldtbzUwblgzbG1lYXhZRzVSOg==',
+            `Basic ` + Buffer.from(secretKey + ':').toString('base64'),
           'Content-Type': 'application/json',
         },
         data: {
@@ -194,7 +198,8 @@ router.get('/toss_normal_callback', async function (req, res) {
       },
     });
   } catch (err: any) {
-    res.status(200).json({
+    console;
+    return res.status(200).json({
       success: false,
       data: null,
       custMsg: '',
@@ -211,7 +216,7 @@ router.get('/toss_auto_fail', async function (req, res) {
       data: {},
     });
   } catch (err: any) {
-    res.status(200).json({
+    return res.status(200).json({
       success: false,
       data: null,
       custMsg: '',
