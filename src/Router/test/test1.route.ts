@@ -34,9 +34,12 @@ router.get('/test1', async function (req: any, res) {
 router.get('/test2', async function (req: any, res) {
   try {
     let bodyData = (req?.body?.test1 ?? '') as string;
-    return res
-      .status(200)
-      .json({ code: '0', a: errorCode[cCodes.c0][cCodes.c1_0001] });
+    return res.status(200).json({
+      code: '0',
+      data: null,
+      imessage: errorCode[cCodes.c1_0001]['en'],
+      tmessage: errorCode[cCodes.c1_0001][langCode],
+    });
   } catch (error: any) {
     return res.json({
       success: false,

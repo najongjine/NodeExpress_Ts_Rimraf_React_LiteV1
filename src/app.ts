@@ -29,7 +29,7 @@ require('dotenv').config();
 const app = express() as any;
 common_modules.set_app_ref(app);
 app.use(cors());
-redisClient.flushall();
+if (redisClient) redisClient.flushall();
 
 const fs = require('fs');
 const https = require('https');

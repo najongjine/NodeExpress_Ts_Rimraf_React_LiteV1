@@ -1,11 +1,11 @@
 [
   {
     "name": "default",
-    "type": "mariadb",
-    "host": "teraenergy.iptime.org",
-    "port": 13306,
-    "username": "teware",
-    "password": "2021",
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "postgres",
+    "password": "a12345",
     "database": "",
     "synchronize": false,
     "entities": ["entities/*.js"]
